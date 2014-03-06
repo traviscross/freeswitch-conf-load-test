@@ -103,6 +103,7 @@
             <param name="sip-trace" value="no"/>
             <param name="dialplan" value="XML"/>
             <param name="context" value="internal"/>
+            <param name="track-calls" value="true"/>
             <!-- sip -->
             <param name="sip-ip" value="$${local_ip_v4}"/>
             <param name="ext-sip-ip" value="$${external_ip_v4}"/>
@@ -122,7 +123,7 @@
             <param name="inbound-codec-negotiation" value="generous"/>
             <param name="inbound-late-negotiation" value="true"/>
             <!-- presence -->
-            <param name="manage-presence" value="false"/>
+            <param name="manage-presence" value="true"/>
             <!-- tls -->
             <param name="tls" value="false"/>
             <!-- registration -->
