@@ -1,0 +1,14 @@
+#!/bin/sh
+ec2_get_local_ipv4 () { wget -O- http://169.254.169.254/latest/meta-data/local-ipv4 2>/dev/null; }
+ec2_get_public_ipv4 () { wget -O- http://169.254.169.254/latest/meta-data/public-ipv4 2>/dev/null; }
+local_var="$1"
+public_var="$2"
+local_ip="" public_ip=""
+if wget -O/dev/null -t1 --timeout=.1 http://169.254.169.254/latest/meta-data 2>/dev/null; then
+  local_ip="$(ec2_get_local_ipv4)"
+  public_ip="$(ec2_get_public_ipv4)"
+fi
+echo "<include>"
+[ -z "$local_ip" ] || echo "  <X-PRE-PROCESS cmd=\"set\" data=\"${local_var}=$local_ip\"/>"
+[ -z "$public_ip" ] || echo "  <X-PRE-PROCESS cmd=\"set\" data=\"${public_var}=$public_ip\"/>"
+echo "</include>"

@@ -1,0 +1,178 @@
+<document type="freeswitch/xml">
+  <X-PRE-PROCESS cmd="set" data="conf_prefix=/etc/freeswitch"/>
+  <X-PRE-PROCESS cmd="set" data="indep_prefix=/usr/share/freeswitch"/>
+  <X-PRE-PROCESS cmd="set" data="state_prefix=/var/lib/freeswitch"/>
+  <X-PRE-PROCESS cmd="set" data="script_prefix=$${conf_prefix}/scripts"/>
+  <X-PRE-PROCESS cmd="set" data="log_prefix=/var/log/freeswitch"/>
+  <X-PRE-PROCESS cmd="set" data="run_prefix=/run/freeswitch"/>
+  <X-PRE-PROCESS cmd="set" data="sound_prefix=$${indep_prefix}/sounds/en/us/callie"/>
+  <X-PRE-PROCESS cmd="set" data="music_prefix=$${indep_prefix}/sounds/music"/>
+  <X-PRE-PROCESS cmd="set" data="sound_prefix_enforced=true"/>
+  <X-PRE-PROCESS cmd="set" data="hold_music=local_stream://moh"/>
+  <X-PRE-PROCESS cmd="set" data="sip_secure_media=false"/>
+  <X-PRE-PROCESS cmd="set" data="rtp_secure_media=false"/>
+  <X-PRE-PROCESS cmd="set" data="zrtp_secure_media=false"/>
+  <X-PRE-PROCESS cmd="set" data="console_loglevel=info"/>
+  <X-PRE-PROCESS cmd="set" data="external_ip_v4=$${local_ip_v4}"/>
+  <X-PRE-PROCESS cmd="exec" data="$${conf_prefix}/util/gen-ip-config local_ip_v4 external_ip_v4 > $${run_prefix}/ipconf.conf.xml"/>
+  <X-PRE-PROCESS cmd="include" data="$${run_prefix}/ipconf.conf.xml"/>
+  <X-PRE-PROCESS cmd="set" data="domain=$${external_ip_v4}"/>
+  <X-PRE-PROCESS cmd="set" data="domain_name=$${domain}"/>
+  <X-PRE-PROCESS cmd="set" data="global_codec_prefs=G722@40i,PCMU@40i"/>
+  <X-PRE-PROCESS cmd="set" data="sdp_m_per_ptime=true"/>
+  <section name="configuration">
+    <configuration name="acl.conf"/>
+    <configuration name="console.conf">
+      <mappings>
+        <map name="all" value="console,debug,info,notice,warning,err,crit,alert"/>
+      </mappings>
+      <settings>
+        <param name="colorize" value="true"/>
+        <param name="loglevel" value="$${console_loglevel}"/>
+      </settings>
+    </configuration>
+    <configuration name="db.conf"/>
+    <configuration name="local_stream.conf">
+      <directory name="moh/8000" path="$${music_prefix}/default/8000">
+        <param name="rate" value="8000"/>
+        <param name="shuffle" value="true"/>
+        <param name="channels" value="1"/>
+        <param name="interval" value="20"/>
+        <param name="timer-name" value="soft"/>
+      </directory>
+      <directory name="moh/16000" path="$${music_prefix}/default/16000">
+        <param name="rate" value="16000"/>
+        <param name="shuffle" value="true"/>
+        <param name="channels" value="1"/>
+        <param name="interval" value="20"/>
+        <param name="timer-name" value="soft"/>
+      </directory>
+      <directory name="moh/32000" path="$${music_prefix}/default/32000">
+        <param name="rate" value="32000"/>
+        <param name="shuffle" value="true"/>
+        <param name="channels" value="1"/>
+        <param name="interval" value="20"/>
+        <param name="timer-name" value="soft"/>
+      </directory>
+      <directory name="moh/48000" path="$${music_prefix}/default/48000">
+        <param name="rate" value="48000"/>
+        <param name="shuffle" value="true"/>
+        <param name="channels" value="1"/>
+        <param name="interval" value="20"/>
+        <param name="timer-name" value="soft"/>
+      </directory>
+    </configuration>
+    <configuration name="modules.conf">
+      <modules>
+        <load module="mod_console"/>
+        <!-- applications -->
+        <load module="mod_commands"/>
+        <load module="mod_db"/>
+        <load module="mod_dptools"/>
+        <load module="mod_hash"/>
+        <load module="mod_spandsp"/>
+        <!-- codecs -->
+        <!-- dialplans -->
+        <load module="mod_dialplan_xml"/>
+        <!-- endpoints -->
+        <load module="mod_sofia"/>
+        <!-- event_handlers -->
+        <!-- formats -->
+        <load module="mod_local_stream"/>
+        <load module="mod_native_file"/>
+        <load module="mod_sndfile"/>
+        <load module="mod_tone_stream"/>
+        <!-- languages -->
+        <!-- say -->
+        <!-- xml_int -->
+      </modules>
+    </configuration>
+    <configuration name="sofia.conf">
+      <global_settings>
+        <param name="log-level" value="0"/>
+        <param name="debug-presence" value="0"/>
+      </global_settings>
+      <profiles>
+        <profile name="internal">
+          <domains>
+            <domain name="all" alias="false" parse="false"/>
+          </domains>
+          <settings>
+            <!-- fs -->
+            <param name="debug" value="0"/>
+            <param name="sip-trace" value="no"/>
+            <param name="dialplan" value="XML"/>
+            <param name="context" value="internal"/>
+            <!-- sip -->
+            <param name="sip-ip" value="$${local_ip_v4}"/>
+            <param name="ext-sip-ip" value="$${external_ip_v4}"/>
+            <param name="sip-port" value="5060"/>
+            <!-- rtp -->
+            <param name="rtp-ip" value="$${local_ip_v4}"/>
+            <param name="ext-rtp-ip" value="$${external_ip_v4}"/>
+            <param name="rtp-timer-name" value="soft"/>
+            <param name="rtp-timeout-sec" value="300"/>
+            <param name="rtp-hold-timeout-sec" value="1800"/>
+            <!-- dtmf -->
+            <param name="dtmf-duration" value="2000"/>
+            <param name="rfc2833-pt" value="101"/>
+            <!-- codecs -->
+            <param name="inbound-codec-prefs" value="$${global_codec_prefs}"/>
+            <param name="outbound-codec-prefs" value="$${global_codec_prefs}"/>
+            <param name="inbound-codec-negotiation" value="generous"/>
+            <param name="inbound-late-negotiation" value="true"/>
+            <!-- presence -->
+            <param name="manage-presence" value="false"/>
+            <!-- tls -->
+            <param name="tls" value="false"/>
+            <!-- registration -->
+            <param name="disable-register" value="true"/>
+            <!-- authentication -->
+            <param name="auth-calls" value="false"/>
+            <!-- audio -->
+            <param name="hold-music" value="$${hold_music}"/>
+            <param name="suppress-cng" value="true"/>
+            <param name="vad" value="none"/>
+          </settings>
+        </profile>
+      </profiles>
+    </configuration>
+    <configuration name="switch.conf">
+      <cli-keybindings>
+        <key name="1" value="console loglevel 0"/>
+        <key name="2" value="console loglevel 1"/>
+        <key name="3" value="console loglevel 2"/>
+        <key name="4" value="console loglevel 3"/>
+        <key name="5" value="console loglevel 4"/>
+        <key name="6" value="console loglevel 5"/>
+        <key name="7" value="console loglevel 6"/>
+        <key name="8" value="console loglevel 7"/>
+        <key name="9" value="sofia status profile internal"/>
+        <key name="10" value="sofia profile internal siptrace on"/>
+        <key name="11" value="sofia profile internal siptrace off"/>
+        <key name="12" value="version"/>
+      </cli-keybindings>
+      <settings>
+        <param name="colorize-console" value="true"/>
+        <param name="max-sessions" value="100000"/>
+        <param name="sessions-per-second" value="100000"/>
+        <param name="loglevel" value="debug"/>
+        <param name="dump-cores" value="yes"/>
+        <param name="rtp-enable-zrtp" value="false"/>
+        <param name="rtp-start-port" value="10000"/>
+        <param name="rtp-end-port" value="59998"/>
+      </settings>
+    </configuration>
+  </section>
+  <section name="dialplan">
+    <context name="internal">
+      <extension name="loadtarget">
+        <condition field="destination_number" expression="^loadtarget$">
+          <action application="answer"/>
+          <action application="sleep" data="60000"/>
+          <action application="hangup"/>
+        </condition>
+      </extension>
+    </context>
+  </section>
+</document>

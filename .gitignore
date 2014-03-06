@@ -1,0 +1,3 @@
+## gitignore
+/freeswitch.serial
+/tls/dtls-srtp.pem
