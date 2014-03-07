@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 mountedp () {
   awk "\$2 == \"$1\" {f=1;} END {if (!f) exit 1;}" /proc/mounts; }
@@ -27,6 +27,6 @@ export ASAN_OPTIONS="abort_on_error=1"
 #export ASAN_OPTIONS="${ASAN_OPTIONS}:detect_leaks=1"
 export ASAN_OPTIONS="${ASAN_OPTIONS}:log_path=/tmp/fs_asan"
 export ASAN_SYMBOLIZER_PATH="$(which llvm-symbolizer-3.5)"
-rm -rf /tmp/fs_$$ && mkdir -p /tmp/fs_$$/{log,db} \
+rm -rf /tmp/fsrun_$$ && mkdir -p /tmp/fsrun_$$/{log,db} \
   && freeswitch -rp -nonat -core -reincarnate-reexec \
-       -conf /etc/freeswitch -log /tmp/fs_$$/log -db /tmp/fs_$$/db
+       -conf /etc/freeswitch -log /tmp/fsrun_$$/log -db /tmp/fsrun_$$/db
