@@ -157,7 +157,7 @@
         <param name="colorize-console" value="true"/>
         <param name="max-sessions" value="100000"/>
         <param name="sessions-per-second" value="100000"/>
-        <param name="loglevel" value="debug"/>
+        <param name="loglevel" value="warning"/>
         <param name="dump-cores" value="yes"/>
         <param name="rtp-enable-zrtp" value="false"/>
         <param name="rtp-start-port" value="10000"/>
