@@ -103,6 +103,7 @@
             <param name="sip-trace" value="no"/>
             <param name="dialplan" value="XML"/>
             <param name="context" value="internal"/>
+            <param name="track-calls" value="true"/>
             <!-- sip -->
             <param name="sip-ip" value="$${local_ip_v4}"/>
             <param name="ext-sip-ip" value="$${external_ip_v4}"/>
