@@ -169,7 +169,7 @@
       <extension name="loadtarget">
         <condition field="destination_number" expression="^loadtarget$">
           <action application="answer"/>
-          <action application="sleep" data="60000"/>
+          <action application="bridge" data="sofia/internal/test@${local_ip_v4}:6060"/>
           <action application="hangup"/>
         </condition>
       </extension>
