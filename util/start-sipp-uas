@@ -1,0 +1,13 @@
+#!/bin/sh
+ulimit -n 1000000   # file descriptors
+local_ip () { ip addr sh eth0 | awk '/inet /{print $2}' | sed -e 's:/.*$::'; }
+start_uas () {
+  while true; do
+    sipp -sn uas \
+      -i $(local_ip) -p 6060 -mp 6100 -cp 6200 -rtp_echo \
+      -recv_timeout 20000 \
+      -send_timeout 10000
+    sleep 3
+  done
+}
+start_uas
