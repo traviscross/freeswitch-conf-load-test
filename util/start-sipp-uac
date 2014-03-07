@@ -1,0 +1,12 @@
+#!/bin/sh
+ulimit -n 1000000   # file descriptors
+local_ip () { ip addr sh eth0 | awk '/inet /{print $2}' | sed -e 's:/.*$::'; }
+start_uac () {
+  local rate="$1"; [ -n "$rate" ] || rate=400
+  sipp -sf /etc/freeswitch/util/uac.xml \
+    -i $(local_ip) -s loadtarget -r $rate -rp 1s -d 2000 \
+    -p 1600 -mp 1700 -cp 1800 \
+    -trace_err \
+    $(local_ip):5060
+}
+start_uac "$1"
