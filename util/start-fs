@@ -1,0 +1,32 @@
+#!/bin/sh
+
+mountedp () {
+  awk "\$2 == \"$1\" {f=1;} END {if (!f) exit 1;}" /proc/mounts; }
+
+if ! mountedp /tmp; then
+  mount -t tmpfs -o noatime,nr_inodes=0,size=75% tmpfs /tmp; fi
+
+sysctl -w kernel.core_pattern=/tmp/core.%t_%h_%e_p%p_s%s_u%u_g%g
+sysctl -w fs.suid_dumpable=1
+ulimit -c unlimited # core
+ulimit -d unlimited # data segment
+ulimit -f unlimited # file size
+ulimit -i unlimited # pending signals
+ulimit -l unlimited # locked memory
+ulimit -m unlimited # memory max size
+ulimit -n 1000000   # file descriptors
+ulimit -q unlimited # POSIX message queue
+ulimit -r 100       # real-time priority
+ulimit -s 240       # stack size
+ulimit -u unlimited # max user processes
+ulimit -v unlimited # virtual memory
+ulimit -x unlimited # file locks
+export ASAN_OPTIONS="abort_on_error=1"
+#export ASAN_OPTIONS="${ASAN_OPTIONS}:check_initialization_order=1"
+#export ASAN_OPTIONS="${ASAN_OPTIONS}:strict_init_order=1"
+#export ASAN_OPTIONS="${ASAN_OPTIONS}:detect_leaks=1"
+export ASAN_OPTIONS="${ASAN_OPTIONS}:log_path=/tmp/fs_asan"
+export ASAN_SYMBOLIZER_PATH="$(which llvm-symbolizer-3.5)"
+rm -rf /tmp/fs_$$ && mkdir -p /tmp/fs_$$/{log,db} \
+  && freeswitch -rp -nonat -core -reincarnate-reexec \
+       -conf /etc/freeswitch -log /tmp/fs_$$/log -db /tmp/fs_$$/db
