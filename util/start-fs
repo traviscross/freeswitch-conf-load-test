@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 mountedp () {
   awk "\$2 == \"$1\" {f=1;} END {if (!f) exit 1;}" /proc/mounts; }
