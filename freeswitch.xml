@@ -157,8 +157,8 @@
         <param name="colorize-console" value="true"/>
         <param name="max-sessions" value="100000"/>
         <param name="sessions-per-second" value="100000"/>
-        <param name="min-idle-cpu" value="60"/>
-        <param name="cpu-idle-smoothing-depth" value="15"/>
+        <param name="min-idle-cpu" value="66"/>
+        <param name="cpu-idle-smoothing-depth" value="1"/>
         <param name="loglevel" value="warning"/>
         <param name="dump-cores" value="yes"/>
         <param name="rtp-enable-zrtp" value="false"/>
